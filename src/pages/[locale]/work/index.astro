@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProjectGrid from '../../../components/ProjectGrid';
+import { isLocale, locales, type Locale } from '../../../lib/i18n';
+import { getProjects } from '../../../lib/projects';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const value = Astro.params.locale;
+if (!isLocale(value)) return Astro.redirect('/en/work/');
+const locale: Locale = value;
+const projects = await getProjects(locale);
+const english = locale === 'en';
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${english ? 'Work' : 'Projetos'} — Fernando`}
+  description={english ? 'Selected projects in audio programming, game systems, creative coding, and critical visualization.' : 'Projetos selecionados em programação de áudio, sistemas de jogos, código criativo e visualização crítica.'}
+>
+  <section class="page-intro section-pad">
+    <p class="kicker"><span></span>{english ? 'Six projects / one connected practice' : 'Seis projetos / uma prática conectada'}</p>
+    <div class="page-intro__grid">
+      <h1>{english ? 'Selected work' : 'Projetos selecionados'}</h1>
+      <p>{english
+        ? 'The collection moves between native audio code, browser sonification, game-engine prototyping, interaction systems, and critical visual research.'
+        : 'A coleção percorre código nativo de áudio, sonificação no navegador, prototipagem em motores de jogo, sistemas de interação e pesquisa visual crítica.'}</p>
+    </div>
+  </section>
+  <section class="collection-page section-pad">
+    <ProjectGrid client:load locale={locale} projects={projects.map(({ data }) => data)} />
+  </section>
+</BaseLayout>

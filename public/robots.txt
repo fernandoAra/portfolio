@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://fernando-playable-portfolio.chic-dill-1128.chatgpt.site/sitemap-index.xml

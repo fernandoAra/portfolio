@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import type { Locale } from '../lib/i18n';
+import { copy } from '../lib/i18n';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  structuredData?: Record<string, unknown>;
+}
+
+const {
+  locale,
+  title = 'Fernando — Games, Sound & Systems',
+  description =
+    'Portfolio of Fernando de Souza Araujo: game systems, audio programming, creative coding, and interactive storytelling.',
+  structuredData,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const enPath = Astro.url.pathname.replace(/^\/(en|pt-BR)/, '/en');
+const ptPath = Astro.url.pathname.replace(/^\/(en|pt-BR)/, '/pt-BR');
+const personData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Fernando de Souza Araujo',
+  url: new URL(`/${locale}/`, canonical),
+  sameAs: ['https://github.com/fernandoAra', 'https://www.linkedin.com/in/fernando-souza-araujo'],
+  knowsAbout: ['Game development', 'Sound design', 'Creative coding', 'Interactive media'],
+};
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#101018" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={new URL(enPath, canonical)} />
+    <link rel="alternate" hreflang="pt-BR" href={new URL(ptPath, canonical)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(enPath, canonical)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og-card.svg', canonical)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{title}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData ?? personData)}></script>
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{copy[locale].skip}</a>
+    <div class="site-shell">
+      <SiteHeader locale={locale} pathname={Astro.url.pathname} />
+      <main id="main"><slot /></main>
+      <SiteFooter locale={locale} />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PlayLauncher from '../../../components/PlayLauncher';
+import { isLocale, locales, type Locale } from '../../../lib/i18n';
+import { getProjects } from '../../../lib/projects';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const value = Astro.params.locale;
+if (!isLocale(value)) return Astro.redirect('/en/play/');
+const locale: Locale = value;
+const english = locale === 'en';
+const projects = await getProjects(locale);
+---
+
+<BaseLayout locale={locale} title={`${english ? 'Build the Brief' : 'Monte o Briefing'} — Fernando`} description={english ? 'An optional project-card puzzle built from real portfolio work.' : 'Um quebra-cabeça opcional de cartas formado por projetos reais do portfólio.'}>
+  <section class="play-page section-pad">
+    <div class="page-intro__grid play-page__intro">
+      <div>
+        <p class="kicker"><span></span>{english ? 'Optional card puzzle' : 'Quebra-cabeça opcional'}</p>
+        <h1>{english ? 'Build the brief' : 'Monte o briefing'}</h1>
+      </div>
+      <div>
+        <p>{english
+          ? 'This is a short demonstration of game-state design, constraint logic, responsive feedback, and accessible input—not a gate in front of the portfolio.'
+          : 'Esta é uma demonstração curta de estado de jogo, lógica de restrições, feedback responsivo e input acessível — não uma barreira para o portfólio.'}</p>
+        <a class="text-link" href={`/${locale}/work/`}>{english ? 'Skip straight to the work' : 'Ir direto aos projetos'}<span>↗</span></a>
+      </div>
+    </div>
+    <PlayLauncher client:load locale={locale} projects={projects.map(({ data }) => data)} />
+  </section>
+</BaseLayout>

@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectGrid from '../../components/ProjectGrid';
+import { copy, isLocale, locales, type Locale } from '../../lib/i18n';
+import { getProjects } from '../../lib/projects';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const localeParam = Astro.params.locale;
+if (!isLocale(localeParam)) return Astro.redirect('/en/');
+const locale: Locale = localeParam;
+const t = copy[locale];
+const projects = await getProjects(locale);
+const featured = projects.filter(({ data }) => data.featured).map(({ data }) => data);
+---
+
+<BaseLayout locale={locale}>
+  <section class="hero section-pad">
+    <div class="hero-copy">
+      <p class="kicker"><span></span>{t.eyebrow}</p>
+      <h1>{t.titleLead}<br /><em>{t.titleAccent}</em></h1>
+      <p class="hero-intro">{t.intro}</p>
+      <div class="hero-actions">
+        <a class="button button--primary" href={`/${locale}/work/`}>{t.browse}<span aria-hidden="true">↗</span></a>
+        <a class="button button--quiet" href={`/${locale}/play/`}>{t.play}<span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div class="hero-table" aria-hidden="true">
+      <div class="studio-card studio-card--back"><span>06</span></div>
+      <div class="studio-card studio-card--middle"><span>FA</span></div>
+      <div class="studio-card studio-card--front">
+        <span class="studio-card__number">01</span>
+        <span class="studio-card__glyph">⌁</span>
+        <span class="studio-card__label">SOUND<br />SYSTEMS</span>
+      </div>
+      <div class="hero-annotation">PLAY IS OPTIONAL<br />THE WORK ISN’T</div>
+    </div>
+    <p class="hero-meta">{t.availability}</p>
+  </section>
+
+  <section class="work-section section-pad" aria-labelledby="featured-title">
+    <div class="section-heading">
+      <div>
+        <p class="section-number">01 / WORK</p>
+        <h2 id="featured-title">{t.featured}</h2>
+      </div>
+      <p>{t.featuredNote}</p>
+    </div>
+    <ProjectGrid client:visible locale={locale} projects={featured} compact />
+    <a class="text-link" href={`/${locale}/work/`}>{t.allWork}<span aria-hidden="true">↗</span></a>
+  </section>
+
+  <section class="play-teaser section-pad">
+    <p class="section-number">02 / OPTIONAL PLAY</p>
+    <div class="play-teaser__grid">
+      <h2>{t.puzzleTitle}</h2>
+      <p>{t.puzzleNote}</p>
+      <a class="button button--primary" href={`/${locale}/play/`}>{t.openPlay}<span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <section class="contact-strip section-pad">
+    <div>
+      <p class="section-number">03 / CONTACT</p>
+      <h2>{t.contact}</h2>
+    </div>
+    <p>{t.contactNote}</p>
+    <div class="contact-links">
+      <a href="https://github.com/fernandoAra" rel="me noreferrer" data-analytics="contact_click">{t.github}<span>↗</span></a>
+      <a href="https://www.linkedin.com/in/fernando-souza-araujo" rel="me noreferrer" data-analytics="contact_click">{t.linkedin}<span>↗</span></a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { isLocale, locales, type Locale } from '../../../lib/i18n';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const value = Astro.params.locale;
+if (!isLocale(value)) return Astro.redirect('/en/about/');
+const locale: Locale = value;
+const english = locale === 'en';
+---
+
+<BaseLayout locale={locale} title={`${english ? 'About' : 'Sobre'} — Fernando`}>
+  <section class="about-hero section-pad">
+    <p class="kicker"><span></span>{english ? 'About the practice' : 'Sobre a prática'}</p>
+    <div class="about-hero__grid">
+      <h1>{english ? 'Between the engine and the ear.' : 'Entre o motor e o ouvido.'}</h1>
+      <div>
+        <p class="large-copy">{english
+          ? 'I’m Fernando de Souza Araujo, a computer science student at Minerva University interested in video games, sound design, and the expressive possibilities of technical systems.'
+          : 'Sou Fernando de Souza Araujo, estudante de ciência da computação na Minerva University, interessado em videogames, design de som e nas possibilidades expressivas de sistemas técnicos.'}</p>
+        <p>{english
+          ? 'My work moves between native C++ audio, game-engine prototypes, browser interaction, data sonification, and critical digital-humanities experiments. I am most interested in projects where implementation choices are part of the creative argument.'
+          : 'Meu trabalho percorre áudio nativo em C++, protótipos em motores de jogo, interação no navegador, sonificação de dados e experimentos críticos em humanidades digitais. Tenho maior interesse por projetos em que as escolhas de implementação fazem parte do argumento criativo.'}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="capability-board section-pad">
+    <p class="section-number">{english ? 'CAPABILITY MAP' : 'MAPA DE COMPETÊNCIAS'}</p>
+    <div class="capability-grid">
+      <article><span>01</span><h2>{english ? 'Game systems' : 'Sistemas de jogos'}</h2><p>{english ? 'State, interaction rules, feedback loops, Godot prototyping, and browser-game architecture.' : 'Estado, regras de interação, loops de feedback, prototipagem em Godot e arquitetura de jogos no navegador.'}</p></article>
+      <article><span>02</span><h2>{english ? 'Sound + DSP' : 'Som + DSP'}</h2><p>{english ? 'C++ audio plug-ins, feedback delay networks, Web Audio, Tone.js, and perceptual evaluation.' : 'Plugins de áudio em C++, redes de atrasos, Web Audio, Tone.js e avaliação perceptiva.'}</p></article>
+      <article><span>03</span><h2>{english ? 'Creative code' : 'Código criativo'}</h2><p>{english ? 'React, TypeScript, interactive data, visual systems, and static experiences built for the open web.' : 'React, TypeScript, dados interativos, sistemas visuais e experiências estáticas para a web aberta.'}</p></article>
+    </div>
+  </section>
+
+  <section class="principles section-pad">
+    <div><p class="section-number">{english ? 'WORKING PRINCIPLES' : 'PRINCÍPIOS DE TRABALHO'}</p><h2>{english ? 'Make the system legible.' : 'Tornar o sistema legível.'}</h2></div>
+    <ol>
+      <li><strong>{english ? 'Start with the perceptual goal.' : 'Começar pelo objetivo perceptivo.'}</strong><span>{english ? 'Decide what someone should notice, hear, or understand before choosing the implementation.' : 'Definir o que alguém deve perceber, ouvir ou entender antes da implementação.'}</span></li>
+      <li><strong>{english ? 'Expose consequential choices.' : 'Expor escolhas importantes.'}</strong><span>{english ? 'Controls, diagrams, and comparisons should reveal how a system frames its result.' : 'Controles, diagramas e comparações devem revelar como o sistema enquadra o resultado.'}</span></li>
+      <li><strong>{english ? 'Verify beyond the happy path.' : 'Verificar além do caminho ideal.'}</strong><span>{english ? 'Measure performance, test alternate inputs, and keep failure states understandable.' : 'Medir desempenho, testar inputs alternativos e manter falhas compreensíveis.'}</span></li>
+    </ol>
+  </section>
+
+  <section class="contact-strip section-pad">
+    <div><p class="section-number">{english ? 'CONTACT' : 'CONTATO'}</p><h2>{english ? 'Find me in public.' : 'Encontre-me online.'}</h2></div>
+    <p>{english ? 'Repositories and technical work are public. Professional background and messages live on LinkedIn.' : 'Repositórios e trabalho técnico são públicos. Histórico profissional e mensagens estão no LinkedIn.'}</p>
+    <div class="contact-links">
+      <a href="https://github.com/fernandoAra" rel="me noreferrer">GitHub<span>↗</span></a>
+      <a href="https://www.linkedin.com/in/fernando-souza-araujo" rel="me noreferrer">LinkedIn<span>↗</span></a>
+      <a href={`/${locale}/resume/`}>{english ? 'Print résumé' : 'Imprimir currículo'}<span>↗</span></a>
+    </div>
+  </section>
+</BaseLayout>

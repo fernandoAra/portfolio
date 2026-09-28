@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { isLocale, locales, type Locale } from '../../../lib/i18n';
+import { getProjects } from '../../../lib/projects';
+
+export function getStaticPaths() { return locales.map((locale) => ({ params: { locale } })); }
+const value = Astro.params.locale;
+if (!isLocale(value)) return Astro.redirect('/en/resume/');
+const locale: Locale = value;
+const english = locale === 'en';
+const projects = await getProjects(locale);
+---
+
+<BaseLayout locale={locale} title={`${english ? 'Résumé' : 'Currículo'} — Fernando`}>
+  <article class="resume section-pad">
+    <header class="resume-header">
+      <div><p class="section-number">{english ? 'PRINTABLE PROFILE' : 'PERFIL PARA IMPRESSÃO'}</p><h1>Fernando de Souza Araujo</h1><p>{english ? 'Creative technologist · Game systems · Sound · Interaction' : 'Tecnólogo criativo · Sistemas de jogos · Som · Interação'}</p></div>
+      <button class="button button--primary print-button" type="button" onclick="window.print()">{english ? 'Print / Save PDF' : 'Imprimir / Salvar PDF'}</button>
+    </header>
+    <section><h2>{english ? 'Profile' : 'Perfil'}</h2><p>{english ? 'Computer science student at Minerva University building expressive technical systems across audio programming, game-engine prototypes, and interactive web work.' : 'Estudante de ciência da computação na Minerva University, construindo sistemas técnicos expressivos em programação de áudio, protótipos em motores de jogo e web interativa.'}</p></section>
+    <section><h2>{english ? 'Selected projects' : 'Projetos selecionados'}</h2><div class="resume-projects">{projects.map(({ data }) => <article><div><strong>{data.title}</strong><span>{data.year}</span></div><p>{data.summary}</p><small>{data.role} · {data.tools.join(' · ')}</small></article>)}</div></section>
+    <section class="resume-columns"><div><h2>{english ? 'Technical focus' : 'Foco técnico'}</h2><p>C++ · Python · TypeScript · React · Astro · Godot · Tone.js · PyTorch · DSP · Web Audio</p></div><div><h2>{english ? 'Public profiles' : 'Perfis públicos'}</h2><p>github.com/fernandoAra<br />linkedin.com/in/fernando-souza-araujo</p></div></section>
+  </article>
+</BaseLayout>

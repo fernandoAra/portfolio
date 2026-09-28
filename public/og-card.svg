@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Fernando — Games, Sound and Systems</title>
+  <desc id="desc">Abstract cards and signal lines on a dark drafting grid.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#393845" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#101018"/><rect width="1200" height="630" fill="url(#grid)" opacity=".75"/>
+  <g transform="translate(760 90) rotate(8 150 220)"><rect width="300" height="440" fill="#181821" stroke="#b895ff" stroke-width="3"/><circle cx="150" cy="170" r="92" fill="none" stroke="#b895ff" stroke-width="3"/><circle cx="150" cy="170" r="56" fill="none" stroke="#b895ff" stroke-dasharray="8 8"/><rect x="205" y="95" width="28" height="28" fill="#f6ee5c" transform="rotate(45 219 109)"/></g>
+  <g transform="translate(650 120) rotate(-5 150 220)"><rect width="300" height="440" fill="#171720" stroke="#62e6ff" stroke-width="3"/><path d="M60 240L238 125M55 290L235 175M60 340L238 225" stroke="#62e6ff" stroke-width="3"/><rect x="205" y="90" width="28" height="28" fill="#f6ee5c" transform="rotate(45 219 104)"/></g>
+  <text x="70" y="110" fill="#62e6ff" font-family="monospace" font-size="22" letter-spacing="4">GAME SYSTEMS · SOUND · INTERACTION</text>
+  <text x="70" y="255" fill="#f4f1ea" font-family="Arial Narrow, sans-serif" font-weight="800" font-size="84">FERNANDO</text>
+  <text x="70" y="340" fill="#f6ee5c" font-family="Arial Narrow, sans-serif" font-weight="800" font-size="84">BUILDS SYSTEMS</text>
+  <text x="70" y="425" fill="#f4f1ea" font-family="Arial Narrow, sans-serif" font-weight="800" font-size="84">YOU CAN FEEL.</text>
+  <text x="70" y="545" fill="#a7a5b2" font-family="monospace" font-size="20" letter-spacing="3">BROWSE THE WORK / PLAY IS OPTIONAL</text>
+</svg>

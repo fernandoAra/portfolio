@@ -1,0 +1,79 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { traitLabels, type Locale } from '../../../lib/i18n';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('projects', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { locale: entry.data.locale, slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const locale = entry.data.locale as Locale;
+const { Content } = await render(entry);
+const english = locale === 'en';
+const otherProjects = (await getCollection('projects', ({ data }) => data.locale === locale && !data.draft && data.projectId !== entry.data.projectId))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 2);
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${entry.data.title} — Fernando`}
+  description={entry.data.summary}
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: entry.data.title,
+    description: entry.data.summary,
+    dateCreated: String(entry.data.year),
+    creator: { '@type': 'Person', name: 'Fernando de Souza Araujo' },
+    url: Astro.url.href,
+    keywords: entry.data.traits,
+  }}
+>
+  <article class={`case-study accent-${entry.data.accent}`}>
+    <header class="case-hero section-pad">
+      <div class="case-hero__copy">
+        <p class="kicker"><span></span>{entry.data.eyebrow}</p>
+        <h1>{entry.data.title}</h1>
+        <p class="case-summary">{entry.data.summary}</p>
+        <div class="case-links">
+          {entry.data.repository && <a class="button button--quiet" href={entry.data.repository} rel="noreferrer">{english ? 'Source repository' : 'Repositório'}<span>↗</span></a>}
+          {entry.data.liveUrl && <a class="button button--primary" href={entry.data.liveUrl} rel="noreferrer">{english ? 'Open project' : 'Abrir projeto'}<span>↗</span></a>}
+        </div>
+      </div>
+      <div class="case-poster" aria-hidden="true">
+        <span class="case-poster__year">{entry.data.year}</span>
+        <div class="case-poster__rings"></div>
+        <strong>{String(entry.data.order).padStart(2, '0')}</strong>
+      </div>
+    </header>
+
+    <section class="case-facts section-pad" aria-label={english ? 'Project facts' : 'Dados do projeto'}>
+      <div><span>{english ? 'Role' : 'Papel'}</span><p>{entry.data.role}</p></div>
+      <div><span>{english ? 'Contribution' : 'Contribuição'}</span><p>{entry.data.contribution}</p></div>
+      <div><span>{english ? 'Tools' : 'Ferramentas'}</span><p>{entry.data.tools.join(' · ')}</p></div>
+      <div><span>{english ? 'Capabilities' : 'Competências'}</span><p>{entry.data.traits.map((trait) => traitLabels[locale][trait]).join(' · ')}</p></div>
+    </section>
+
+    <div class="case-body section-pad prose">
+      <Content />
+    </div>
+  </article>
+
+  <aside class="next-work section-pad" aria-labelledby="next-work-title">
+    <p class="section-number">{english ? 'NEXT / WORK' : 'PRÓXIMOS / PROJETOS'}</p>
+    <h2 id="next-work-title">{english ? 'Keep browsing' : 'Continue explorando'}</h2>
+    <div class="next-work__grid">
+      {otherProjects.map(({ data }) => (
+        <a class={`next-card accent-${data.accent}`} href={`/${locale}/work/${data.slug}/`}>
+          <span>{data.eyebrow}</span><strong>{data.title}</strong><em>↗</em>
+        </a>
+      ))}
+    </div>
+  </aside>
+</BaseLayout>

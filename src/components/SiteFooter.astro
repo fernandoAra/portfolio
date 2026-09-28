@@ -1,0 +1,21 @@
+---
+import { copy, type Locale } from '../lib/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = copy[locale];
+---
+
+<footer class="site-footer">
+  <p>{t.footer}</p>
+  <div class="footer-links">
+    <a href="https://github.com/fernandoAra" rel="me noreferrer" data-analytics="contact_click">{t.github}</a>
+    <a href="https://www.linkedin.com/in/fernando-souza-araujo" rel="me noreferrer" data-analytics="contact_click">{t.linkedin}</a>
+  </div>
+</footer>
+
+<script>
+  import { track } from '../lib/analytics';
+  document.querySelectorAll<HTMLElement>('[data-analytics]').forEach((element) => {
+    element.addEventListener('click', () => track(element.dataset.analytics ?? 'interaction'));
+  });
+</script>
